@@ -48,13 +48,13 @@ if (val1.size()==0){
             return slope;
         }
         
-        var trendCounter = 0;
-        var threshold = 3; //3 iterations at 15 mintues each, I figure 45 mins is enough to judge the equipment response 
+        var mark = null;
+        var threshold = 1; // 1 degree past the mark
 
         if (ZnTmpSp.length > 0 && ZnTmp.length > 0) {
             var windowSize = 3;
-            var prevZnTmp = null;
-            for (var i=windowSize-1;i<ts.size();i++){
+
+            for (var i = windowSize - 1; i < ts.size(); i++) {
                 if (ZnTmpSp[i] != null && ZnTmp[i] != null) {
                     var timestamp = "" + ts.get(i);
                     var timeStr = timestamp.substr(timestamp.indexOf("T") + 1, 5);
@@ -64,20 +64,23 @@ if (val1.size()==0){
 
                         var slope = calculateSlope(ZnTmp, i, windowSize);
 
-                        if (slope < 0) {
-                            trendCounter ++;
-                        } else {
-                            trendCounter = 0;
+                        if (slope < 0 && mark === null) {
+                            //setting a mark when the downward slope starts
+                            mark = ZnTmp[i];
                         }
 
-                        if (trendCounter >= threshold) {
-                            //trending downward for too long
+                        if (mark !== null && (mark - ZnTmp[i]) > threshold) {
+                            //trended too far down, flag
                             cnt1++;
                             counted[i] = 1.0;
                         }
 
-                        val1.get(_slope)[i] = slope;
+                        if (slope >= 0.1) {
+                            //resettig the mark if it sufficiently trends positive
+                            mark = null;
+                        }
 
+                        val1.get(_slope)[i] = slope;
                     }
                 }
             }
