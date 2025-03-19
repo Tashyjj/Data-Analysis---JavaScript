@@ -21,7 +21,8 @@ if (val1.size()==0){
         var ZnTmpSp = val1.get(_ZnTmpSp);
         var ZnTmp = val1.get(_ZnTmp);
         var HtgDmd = val1.get(_HtgDmd);
-
+        
+        //calculating the linear regression of the point (ZnTmp)
         function calculateSlope(arr, startIndex, windowSize) {
             if (startIndex < windowSize - 1) return 0;
         
@@ -47,6 +48,9 @@ if (val1.size()==0){
             return slope;
         }
         
+        var trendCounter = 0;
+        var threshold = 3; //3 iterations at 15 mintues each, I figure 45 mins is enough to judge the equipment response 
+
         if (ZnTmpSp.length > 0 && ZnTmp.length > 0) {
             var windowSize = 3;
             var prevZnTmp = null;
@@ -61,7 +65,13 @@ if (val1.size()==0){
                         var slope = calculateSlope(ZnTmp, i, windowSize);
 
                         if (slope < 0) {
-                            //not moving up
+                            trendCounter ++;
+                        } else {
+                            trendCounter = 0;
+                        }
+
+                        if (trendCounter >= threshold) {
+                            //trending downward for too long
                             cnt1++;
                             counted[i] = 1.0;
                         }
