@@ -68,19 +68,6 @@ if (val1.size()==0){
 
                         val1.get(_slope)[i] = slope;
 
-                        // if (ZnTmp[i] < (ZnTmpSp[i] + 2)){
-                        //     if (prevZnTmp != null && ZnTmp[i] <= prevZnTmp){
-                        //         cnt1++;
-                        //         counted[i] = 1.0;
-                        //     }
-                            
-                        //     if (prevHtgDmd != null && HtgDmd[i] <= prevHtgDmd) {
-                        //         cnt1++;
-                        //         counted[i] = 2.0;
-                        //     }
-                        // }
-                        // prevZnTmp = ZnTmp[i];
-                        // prevHtgDmd = HtgDmd[i];
                     }
                 }
             }
